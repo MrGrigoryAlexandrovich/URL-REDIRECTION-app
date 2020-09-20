@@ -1,12 +1,5 @@
 const amqp = require("amqplib");
-const redis = require('redis');
-
-// Create Redis Client
-let client = redis.createClient();
-
-client.on('connect', function(){
-  console.log('Connected to Redis...');
-});
+const client = require('./redis-connection')
 
 connect();
 async function connect() {
@@ -15,22 +8,23 @@ async function connect() {
         const amqpServer = "amqp://localhost:5672"
         const connection = await amqp.connect(amqpServer)
         const channel = await connection.createChannel();
-        await channel.assertQueue("channel1");
+        await channel.assertQueue("url-channel3");
         
-            channel.consume("channel1", message => {
+            channel.consume("url-channel3", message => {
             message = JSON.parse(message.content.toString());
-            console.log('Recieved '+message)
-
+            console.log('Recieved');
+            console.log(message);
             switch(message[0])
             {
                 case "Created":
-                    client.hmset(message[1],[
+                    client.hmset(message[3].substring(22),[
+                    'id',message[1],
                     'realURL',message[2],
-                    'shortURL',message[3]
+                    'shortURL', message[3]
                 ]);
                 break;
                 case "Deleted":
-                client.del(message[1]);
+                client.del(message[3].substring(22));
                 break;
                 default:
                 console.log('Unknown case');
