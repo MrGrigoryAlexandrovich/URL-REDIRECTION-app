@@ -1,4 +1,12 @@
 const amqp = require("amqplib");
+const redis = require('redis');
+
+// Create Redis Client
+let client = redis.createClient();
+
+client.on('connect', function(){
+  console.log('Connected to Redis...');
+});
 
 connect();
 async function connect() {
@@ -7,16 +15,30 @@ async function connect() {
         const amqpServer = "amqp://localhost:5672"
         const connection = await amqp.connect(amqpServer)
         const channel = await connection.createChannel();
-        await channel.assertQueue("urls");
+        await channel.assertQueue("channel1");
         
-            channel.consume("urls", message => {
-            const msg = JSON.parse(message.content.toString());
-            console.log(`Recieved  ${msg}`)
-           // if(msg[0]=="Created") if is create in redis //maybe switch case for created and deleted
-            //console.log('DA')
+            channel.consume("channel1", message => {
+            message = JSON.parse(message.content.toString());
+            console.log('Recieved '+message)
+
+            switch(message[0])
+            {
+                case "Created":
+                    client.hmset(message[1],[
+                    'realURL',message[2],
+                    'shortURL',message[3]
+                ]);
+                break;
+                case "Deleted":
+                client.del(message[1]);
+                break;
+                default:
+                console.log('Unknown case');
+                
+            }
         })
 
-        console.log("Waiting for messages...")
+        console.log("Waiting for messages from producer...")
     
     }
     catch (ex){
