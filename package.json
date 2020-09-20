@@ -1,0 +1,20 @@
+{
+  "name": "url-redirection",
+  "version": "1.0.0",
+  "description": "url redirection service",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrGrigoryAlexandrovich/URL-REDIRECTION.git"
+  },
+  "author": "Ahmed Cvrčak",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.6.0",
+    "express": "^4.17.1"
+  }
+}
