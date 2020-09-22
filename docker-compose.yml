@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:    
+    
+    node-app:
+        build: .
+        environment:
+            - DATABASE_HOST=db
+            - TZ=Europe/Sarajevo
+        depends_on:
+            - redis
+        restart: always
+        ports:
+            - 3000:3000
+        links:
+            - redis
+        networks: 
+            url-shortening-app_shortner_net:
+                ipv4_address: 172.28.0.8
+        
+ 
+    redis:
+        image: redis
+        ports: 
+        - 6379:6379
+        networks: 
+            url-shortening-app_shortner_net:
+                ipv4_address: 172.28.0.9
+    
+networks: 
+    url-shortening-app_shortner_net:
+        external: true
+
+        
+        
+
+
+
+          

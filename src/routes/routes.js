@@ -9,7 +9,7 @@ router.get('/check/:shortURL',(req,res) => {
         console.log(err);
         if(reply)
         {
-         res.sendStatus(302);
+        res.redirect('http://'+reply.realURL)
         }
         else
         res.sendStatus(404);
