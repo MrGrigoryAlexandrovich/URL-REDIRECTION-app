@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const cunsumer = require('../src/consumer');
+const client = require('./redis-connection');
 const routes = require('./routes/routes')
 app.use('/api/routes',routes)
 
