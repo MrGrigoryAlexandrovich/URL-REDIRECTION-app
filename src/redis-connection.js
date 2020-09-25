@@ -7,7 +7,7 @@ let client = redis.createClient({
 });
 
 client.on('connect', function(){
-  console.log('Connected to Redis...');
+console.log('Connected to Redis...');
 });
 
 module.exports = client;

@@ -37,7 +37,7 @@ async function connect() {
     
     }
     catch (ex){
-        console.error(ex)
+    console.error(ex)
     }
 
 }

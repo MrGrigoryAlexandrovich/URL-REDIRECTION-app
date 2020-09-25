@@ -11,20 +11,21 @@ router.get('/check/:shortURL',(req,res) => {
         if(err)
         console.log(err);
         if(reply) //if exist
-        {
-          client.get("shorturl:"+req.params.shortURL,(error,result)=> // select helper/expire key shorturl:+shortlink key
+        {  
+          //RATE LIMIT CODE - BONUS
+          client.get("shorturl:"+req.params.shortURL,(error,result)=> // select helper/expire key shorturl:+shortlink key for rate limit
           {
             if(error)
             console.log(error)
             if(result)    // if exist
             {
-              if(result==9)   // if has 10 request in 120sec
+              if(result==9)   // if has 10 request in 120sec -> first request is null - last is 9
               {
               console.log(result + 'Too Many Requests')
               client.expire("shorturl:"+req.params.shortURL,120) // update helper expire time - 120sec
               res.sendStatus(429);  //send status 429 - to many requests
               }
-              else  //if has 1 - 9 request in 120sec
+              else  //if has 1 - 9 request in 120sec 
               {
                   console.log(result) 
                   client.incr('shorturl:'+req.params.shortURL)  // increase request number
@@ -34,7 +35,7 @@ router.get('/check/:shortURL',(req,res) => {
             }
             else // if is first request in 120 sec
             {
-            client.append("shorturl:"+req.params.shortURL,1) // created helper expire key
+            client.append("shorturl:"+req.params.shortURL,1) // created helper expire key - first value is null second is 1 - last 10
             client.expire("shorturl:"+req.params.shortURL,120)  // key expire in 120sec
             console.log(result)
             res.redirect(302,'http://'+reply.realURL) // send status 302 and redirect to realURL
