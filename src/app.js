@@ -1,17 +1,19 @@
-//  loading express
-const express = require('express');
-//  initializing express
-const app = express();
+//  loading express and config
+const express = require('express')
+const app = express()
+const config = require('../config')
+//define port
+const PORT = config.app_port || 8001
+
 //  loading consumer, redis connection and routes
-const cunsumer = require('../src/consumer');
-const client = require('./redis-connection');
+const cunsumer = require('./rabbitmq-consumer/consumer')
+const client = require('./redis-connection/redis-connection')
 const routes = require('./routes/routes')
+
 // initializing routes
 app.use('/api/routes',routes)
 
-const PORT = 3000 || process.env.PORT;
 //  start server
-app.listen(PORT, ()=>
-{
+app.listen(PORT, ()=> {
     console.log("Server run on ",PORT)
 })
