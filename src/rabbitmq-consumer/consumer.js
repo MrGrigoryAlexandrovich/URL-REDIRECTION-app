@@ -20,7 +20,6 @@ async function connect() {
             channel.consume(config.rabbitmq_channel, message => {       
             message = JSON.parse(message.content.toString())   
             console.log('Consumer: Message received successfully')
-
             //switch-case for cheking producer create or delete shortURL
             switch(message[0])  {
 
@@ -43,6 +42,8 @@ async function connect() {
                 console.log('Unknown case')
                 
             }
+        },{
+            noAck:true
         })
 
         console.log("Waiting for messages from producer...")
