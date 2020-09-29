@@ -1,5 +1,7 @@
+//loading redis and config
 const redis = require('redis');
 const config = require('../../config')
+
 // Create Redis Client and connection
 let client = redis.createClient({
   port: config.redis_port,
